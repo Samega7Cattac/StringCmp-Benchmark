@@ -58,8 +58,6 @@ int main(int argc, char * argv[])
     return 0;
 }
 
-
-
 void usage(char * call)
 {
     std::cout << "USAGE:" << "\t" << call << " <string_a> <string_b>" << std::endl;
