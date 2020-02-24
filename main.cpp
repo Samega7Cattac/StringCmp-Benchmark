@@ -1,15 +1,8 @@
 #include <iostream>
 #include <cstring>
-// #include <random>
 #include <chrono>
 
-/*#define N_TIMES 1000000
-#define GEN_STRING_LEGHT 1024*/
-
-
 void usage(char * call);
-
-void lenght_and_memory_argcmp(char * a, const char * b, int arglen);
 
 int main(int argc, char * argv[])
 {
