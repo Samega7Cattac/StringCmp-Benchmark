@@ -22,7 +22,7 @@ int main(int argc, char * argv[])
     start = std::chrono::high_resolution_clock::now();
     if (!test_str_a.compare(test_str_b)) test = true;
     time = std::chrono::duration<int, std::nano>(std::chrono::high_resolution_clock::now() - start).count();
-    std::cout << "string comp methood: " << std::boolalpha << test  << " in " << std::fixed << time << " nanosec" << std::endl;
+    std::cout << "string comp method: " << std::boolalpha << test  << " in " << std::fixed << time << " nanosec" << std::endl;
     
     test = false;
     start = std::chrono::high_resolution_clock::now();
