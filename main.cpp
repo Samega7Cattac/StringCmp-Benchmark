@@ -11,42 +11,37 @@ int main(int argc, char * argv[])
     std::string test_str_b = argv[2];
     std::chrono::_V2::system_clock::time_point start;
     int time = 0;
-    
+    bool test = false;
+
     start = std::chrono::high_resolution_clock::now();
-    if (argv[1] == argv[2])
-        ;
+    if (test_str_a == test_str_b) test = true;
     time = std::chrono::duration<int, std::nano>(std::chrono::high_resolution_clock::now() - start).count();
-    std::cout << "direct == comp: " << std::fixed << time << " nanosec" << std::endl;
+    std::cout << "direct == string comp: " << std::boolalpha << test  << " in " << std::fixed << time << " nanosec" << std::endl;
     
+    test = false;
     start = std::chrono::high_resolution_clock::now();
-    if (test_str_a == test_str_b)
-        ;
+    if (!test_str_a.compare(test_str_b)) test = true;
     time = std::chrono::duration<int, std::nano>(std::chrono::high_resolution_clock::now() - start).count();
-    std::cout << "direct == string comp: " << std::fixed << time << " nanosec" << std::endl;
+    std::cout << "string comp methood: " << std::boolalpha << test  << " in " << std::fixed << time << " nanosec" << std::endl;
     
+    test = false;
     start = std::chrono::high_resolution_clock::now();
-    test_str_a.compare(test_str_b);
+    if (!strcmp(argv[1], argv[2])) test = true;
     time = std::chrono::duration<int, std::nano>(std::chrono::high_resolution_clock::now() - start).count();
-    std::cout << "string comp methood: " << std::fixed << time << " nanosec" << std::endl;
+    std::cout << "strcmp method: " << std::boolalpha << test  << " in " << std::fixed << time << " nanosec" << std::endl;
     
-    start = std::chrono::high_resolution_clock::now();
-    if (!strcmp(argv[1], argv[2]))
-        ;
-    time = std::chrono::duration<int, std::nano>(std::chrono::high_resolution_clock::now() - start).count();
-    std::cout << "strcmp method: " << std::fixed << time << " nanosec" << std::endl;
-    
+    test = false;
     int arglen = strlen(argv[2]);
     start = std::chrono::high_resolution_clock::now();
-    if (!memcmp(argv[1], argv[2], arglen))
-        ;
+    if (!memcmp(argv[1], argv[2], arglen)) test = true;
     time = std::chrono::duration<int, std::nano>(std::chrono::high_resolution_clock::now() - start).count();
-    std::cout << "memcmp method: " << std::fixed << time << " nanosec" << std::endl;
+    std::cout << "memcmp method: " << std::boolalpha << test  << " in " << std::fixed << time << " nanosec" << std::endl;
     
+    test = false;
     start = std::chrono::high_resolution_clock::now();
-    if (*(argv[1] + arglen) == '\0' && !memcmp(argv[1], argv[2], arglen))
-        ;
+    if (*(argv[1] + arglen) == '\0' && !memcmp(argv[1], argv[2], arglen)) test = true;
     time = std::chrono::duration<int, std::nano>(std::chrono::high_resolution_clock::now() - start).count();
-    std::cout << "lenght_and_memory_argcmp: " << std::fixed << time << " nanosec" << std::endl;
+    std::cout << "length_and_memory_argcmp: " << std::boolalpha << test  << " in " << std::fixed << time << " nanosec" << std::endl;
     
     return 0;
 }

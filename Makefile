@@ -1,10 +1,14 @@
-OUTPUT=benchmark
+OUTPUT= ./benchmark
+OBJS= main.o
 
-all:
-	$(CXX) main.cpp -o ./$(OUTPUT) $(CXXFLASGS)
+all: $(OBJS)
+	$(CXX) $(OBJS) -o $(OUTPUT) $(CXXFLASGS)
+
+%.o: %.cpp %.hpp
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
 debug: CXXFLAGS += -g
 debug: all
 
 clean:
-	rm ./$(OUTPUT)
+	rm -f $(OBJS) $(OUTPUT)
