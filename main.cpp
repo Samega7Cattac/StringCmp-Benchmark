@@ -4,50 +4,65 @@
 
 #include "s7c_benchmark.hpp"
 
+#define N_TIMES 100000000
+
 void usage(char * call);
 
 int main(int argc, char * argv[])
 {
-    if (argc != 3) usage(argv[0]);
+    if (argc != 3 && argc != 4) usage(argv[0]);
+    unsigned int n_times = N_TIMES;
+    if (argc == 4) n_times = atoi(argv[3]);
     std::string test_str_a = argv[1];
     std::string test_str_b = argv[2];
-    bool test = false;
     
-    Timer timer;
-    if (test_str_a == test_str_b) test = true;
-    timer.stop();
-    std::cout << "direct == string comp: " << std::boolalpha << test  << " in " << std::fixed << timer.get_sum() << " nanosec" << std::endl;
+    Timer directT("direct == string comp", false);
+    Timer stringT("string.compare", false);
+    Timer strcmpT("strcmp", false);
+    Timer memcmpT("memcmp", false);
+    Timer lmemcmpT("length_and_memory_argcmp", false);
     
-    test = false;
-    timer.start(true);
-    if (!test_str_a.compare(test_str_b)) test = true;
-    timer.stop();
-    std::cout << "string comp method: " << std::boolalpha << test  << " in " << std::fixed << timer.get_sum() << " nanosec" << std::endl;
+    bool res_direct = false;
+    bool res_string = false;
+    bool res_strcmp = false;
+    bool res_memcpy = false;
+    bool res_lmemcpy = false;
     
-    test = false;
-    timer.start(true);
-    if (!strcmp(argv[1], argv[2])) test = true;
-    timer.stop();
-    std::cout << "strcmp method: " << std::boolalpha << test  << " in " << std::fixed << timer.get_sum() << " nanosec" << std::endl;
-    
-    test = false;
-    int arglen = strlen(argv[2]);
-    timer.start(true);
-    if (!memcmp(argv[1], argv[2], arglen)) test = true;
-    timer.stop();
-    std::cout << "memcmp method: " << std::boolalpha << test  << " in " << std::fixed << timer.get_sum() << " nanosec" << std::endl;
-    
-    test = false;
-    timer.start(true);
-    if (*(argv[1] + arglen) == '\0' && !memcmp(argv[1], argv[2], arglen)) test = true;
-    timer.stop();
-    std::cout << "length_and_memory_argcmp: " << std::boolalpha << test  << " in " << std::fixed << timer.get_sum() << " nanosec" << std::endl;
+    for (unsigned int i = 0; i < n_times; ++i)
+    {
+        directT.start();
+        if (test_str_a == test_str_b) res_direct = true;
+        directT.stop();
+        
+        stringT.start();
+        if (!test_str_a.compare(test_str_b)) res_string = true;
+        stringT.stop();
+        
+        strcmpT.start();
+        if (!strcmp(argv[1], argv[2])) res_strcmp = true;
+        strcmpT.stop();
+        
+        int arglen = strlen(argv[2]);
+        memcmpT.start();
+        if (!memcmp(argv[1], argv[2], arglen)) res_memcpy = true;
+        memcmpT.stop();
+        
+        lmemcmpT.start();
+        if (*(argv[1] + arglen) == '\0' && !memcmp(argv[1], argv[2], arglen)) res_lmemcpy = true;
+        lmemcmpT.stop();
+    }
+    std::cout << std::fixed << std::boolalpha;
+    std::cout << "direct == comp: " << res_direct  << " in " << directT.get_sum() / n_times << " nanosec" << std::endl;
+    std::cout << "string.compare: " << res_string  << " in " << stringT.get_sum() / n_times << " nanosec" << std::endl;
+    std::cout << "strcmp: " << res_strcmp  << " in " << strcmpT.get_sum() / n_times << " nanosec" << std::endl;
+    std::cout << "memcmp: " << res_memcpy  << " in " << memcmpT.get_sum() / n_times << " nanosec" << std::endl;
+    std::cout << "length_and_memory_argcmp: " << res_lmemcpy  << " in " << lmemcmpT.get_sum() / n_times << " nanosec" << std::endl;
     
     return 0;
 }
 
 void usage(char * call)
 {
-    std::cout << "USAGE:" << "\t" << call << " <string_a> <string_b>" << std::endl;
+    std::cout << "USAGE:" << "\t" << call << " <string_a> <string_b> [n_iterations]" << std::endl;
     exit(0);
 }
