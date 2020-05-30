@@ -1,14 +1,14 @@
-OUTPUT= ./benchmark
-OBJS= main.o
+OUTPUT = benchmark
+OBJS = s7c_benchmark.o main.o
 
 all: $(OBJS)
-	$(CXX) $(OBJS) -o $(OUTPUT) $(CXXFLASGS)
+	$(CXX) $(OBJS) -o $(OUTPUT) $(CXXFLAGS)
 
-%.o: %.cpp %.hpp
+%.o: %.cpp
 	$(CXX) -c -o $@ $< $(CXXFLAGS)
 
-debug: CXXFLAGS += -g
+debug: CXXFLAGS += -g -fsanitize=address -Wall
 debug: all
 
 clean:
-	rm -f $(OBJS) $(OUTPUT)
+	rm -f *.o $(OUTPUT)
